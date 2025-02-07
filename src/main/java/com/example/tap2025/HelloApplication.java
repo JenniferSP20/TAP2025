@@ -1,5 +1,6 @@
 package com.example.tap2025;
 
+import com.example.tap2025.vistas.Calculadora;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -14,7 +15,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-//Pantalla de inicio
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
@@ -23,21 +23,23 @@ public class HelloApplication extends Application {
 
     void CrearUI(){
         mitCalculadora=new MenuItem("Calculadora");
-        menCompetencia1=new Menu("Competencia1");
-        menCompetencia1.getItems().add(mitCalculadora);
+        mitCalculadora.setOnAction(event -> new Calculadora());
+        menCompetencia1=new Menu("Competencia 1");
+        menCompetencia1.getItems().addAll(mitCalculadora);
         mnbPrincipal=new MenuBar();
-        mnbPrincipal.getMenus().add(menCompetencia1);
+        mnbPrincipal.getMenus().addAll(menCompetencia1);
+        vBox=new VBox(mnbPrincipal);
 
     }
 
     @Override
     public void start(Stage stage) throws IOException {
-
-        vBox= new VBox();
+        CrearUI(); //Instancia el vertical box
         stage.setTitle("Hola Mundo de Eventos :)");
-        stage.setScene(new Scene vBox);
+        stage.setScene(new Scene (vBox));
         stage.show();
         stage.setMaximized(true);
+
     }
 
     public static void main(String[] args) {
