@@ -29,6 +29,8 @@ public class HelloApplication extends Application {
         mnbPrincipal=new MenuBar();
         mnbPrincipal.getMenus().addAll(menCompetencia1);
         vBox=new VBox(mnbPrincipal);
+        escena=new Scene(vBox);
+        escena.getStylesheets().add(getClass().getResource("/Styles/main.css").toString());
 
     }
 
@@ -36,7 +38,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         CrearUI(); //Instancia el vertical box
         stage.setTitle("Hola Mundo de Eventos :)");
-        stage.setScene(new Scene (vBox));
+        stage.setScene(escena);
         stage.show();
         stage.setMaximized(true);
 

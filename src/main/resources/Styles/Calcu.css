@@ -1,0 +1,22 @@
+.button {
+    -fx-background-color: #a5b7fa;
+    -fx-border-color: #5e7ffd;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Cambria Math";
+    -fx-font-size: 16;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    /*-fx-padding: 5,10,15,2; del padre a hijo, maggin de hijo a padre*/
+
+}
+#fontButton {
+    -fx-background-color: #ffffff ;
+    -fx-text-fill:  #5e7ffd;
+
+}
+#fontButton:hover {
+    -fx-background-color:#a5b7fa;
+}
+.button:hover{
+    -fx-background-color:#5e7ffd ;
+}
