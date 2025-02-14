@@ -1,6 +1,7 @@
 package com.example.tap2025;
 
 import com.example.tap2025.vistas.Calculadora;
+import com.example.tap2025.vistas.VentasRestaurante;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -11,21 +12,22 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class HelloApplication extends Application {
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitCalculadora;
+    private MenuItem mitCalculadora, mitRestaurante;
     private Scene escena;
-
+//CRUD altas bajas y cambios
     void CrearUI(){
         mitCalculadora=new MenuItem("Calculadora");
         mitCalculadora.setOnAction(event -> new Calculadora());
+        mitRestaurante=new MenuItem("Restaurante");
+        mitRestaurante.setOnAction(event -> new VentasRestaurante());
         menCompetencia1=new Menu("Competencia 1");
-        menCompetencia1.getItems().addAll(mitCalculadora);
+        menCompetencia1.getItems().addAll(mitCalculadora,mitRestaurante);
         mnbPrincipal=new MenuBar();
         mnbPrincipal.getMenus().addAll(menCompetencia1);
         vBox=new VBox(mnbPrincipal);
