@@ -13,12 +13,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class HelloApplication extends Application {
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitCalculadora, mitRestaurante;
+    private MenuItem mitCalculadora, mitRestaurante, mitRompecabezas;
     private Scene escena;
 //CRUD altas bajas y cambios
     void CrearUI(){
@@ -32,7 +33,9 @@ public class HelloApplication extends Application {
         mnbPrincipal.getMenus().addAll(menCompetencia1);
         vBox=new VBox(mnbPrincipal);
         escena=new Scene(vBox);
-        escena.getStylesheets().add(getClass().getResource("/Styles/main.css").toString());
+        escena.getStylesheets().add(getClass().getResource("/Styles/main.css").toExternalForm());
+
+
 
     }
 

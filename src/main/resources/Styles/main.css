@@ -1,3 +1,6 @@
-.root{
-    -fx-background-image: ulr("../Img/f.jpg");
+.root {
+    -fx-background-image: url("FondoTAP.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
 }
