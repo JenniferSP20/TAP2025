@@ -4,9 +4,9 @@ import java.sql.DriverManager;
 
 public class Conexion
 {
-    static private String DB = "restaurante";
-    static private String USER = "adminRestaurante";
-    static private String PASSWORD = "admin2124";
+    static private String DB = "Restaurante";
+    static private String USER = "AdminRestaurante";
+    static private String PASSWORD = "123456";
     static private String HOST = "localhost";
     static private String PORT = "3306";
     public static Connection connection;

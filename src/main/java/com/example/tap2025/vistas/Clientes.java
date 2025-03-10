@@ -1,5 +1,4 @@
 package com.example.tap2025.vistas;
-
 import com.example.tap2025.modelos.ClientesDAO;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +16,7 @@ public class Clientes extends Stage {
     private ClientesDAO objC;
     private TableView<ClientesDAO> tbvClientes;
 
-    public Cliente(TableView<ClientesDAO> tbvCte){
+    public Clientes(TableView<ClientesDAO> tbvCte) {
         this.tbvClientes = tbvCte;
         objC = new ClientesDAO();
         CrearUI();
@@ -25,7 +24,8 @@ public class Clientes extends Stage {
         this.setScene(escena);
         this.show();
     }
-    private void CrearUI(){
+
+    private void CrearUI() {
         txtNomCte = new TextField();
         txtDireccion = new TextField();
         txtTelCte = new TextField();
@@ -41,7 +41,7 @@ public class Clientes extends Stage {
             tbvClientes.refresh();
             this.close();
         });
-        vBox = new VBox(txtNomCte,txtDireccion,txtTelCte,txtEmail,btnGuardar);
-        escena = new Scene(vBox,120,150);
+        vBox = new VBox(txtNomCte, txtDireccion, txtTelCte, txtEmail, btnGuardar);
+        escena = new Scene(vBox, 120, 150);
     }
-
+}
