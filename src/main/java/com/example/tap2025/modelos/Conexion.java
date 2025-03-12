@@ -4,9 +4,9 @@ import java.sql.DriverManager;
 
 public class Conexion
 {
-    static private String DB = "Restaurante";
-    static private String USER = "AdminRestaurante";
-    static private String PASSWORD = "123456";
+    static private String DB = "restaurante";
+    static private String USER = "admin";
+    static private String PASSWORD = "1234567890";
     static private String HOST = "localhost";
     static private String PORT = "3306";
     public static Connection connection;
@@ -17,7 +17,7 @@ public class Conexion
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DB, USER, PASSWORD);
-            System.out.println("CONEXION ESTABLECIDA ");
+            System.out.println("CONEXION ESTABLECIDA :)");
         }
         catch(Exception e)
         {

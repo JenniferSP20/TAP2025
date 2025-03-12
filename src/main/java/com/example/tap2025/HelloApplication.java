@@ -1,6 +1,9 @@
 package com.example.tap2025;
 
+import com.example.tap2025.modelos.Conexion;
 import com.example.tap2025.vistas.Calculadora;
+import com.example.tap2025.vistas.ListaClientes;
+import com.example.tap2025.vistas.Rompecabezas;
 import com.example.tap2025.vistas.VentasRestaurante;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,21 +29,22 @@ public class HelloApplication extends Application {
         mitCalculadora=new MenuItem("Calculadora");
         mitCalculadora.setOnAction(event -> new Calculadora());
         mitRestaurante=new MenuItem("Restaurante");
-        mitRestaurante.setOnAction(event -> new VentasRestaurante());
+        mitRestaurante.setOnAction(event -> new ListaClientes());
+        mitRompecabezas=new MenuItem("Rompecabezas");
+        mitRompecabezas.setOnAction(event -> new Rompecabezas());
         menCompetencia1=new Menu("Competencia 1");
-        menCompetencia1.getItems().addAll(mitCalculadora,mitRestaurante);
+        menCompetencia1.getItems().addAll(mitCalculadora,mitRestaurante, mitRompecabezas);
         mnbPrincipal=new MenuBar();
         mnbPrincipal.getMenus().addAll(menCompetencia1);
         vBox=new VBox(mnbPrincipal);
         escena=new Scene(vBox);
         escena.getStylesheets().add(getClass().getResource("/Styles/main.css").toExternalForm());
 
-
-
     }
 
     @Override
     public void start(Stage stage) throws IOException {
+        Conexion.create_connection();
         CrearUI(); //Instancia el vertical box
         stage.setTitle("Hola Mundo de Eventos :)");
         stage.setScene(escena);

@@ -98,7 +98,7 @@ public class ClientesDAO {
                 objC.setNomCte(res.getString("nomCte"));
                 objC.setDireccion(res.getString("direccion"));
                 objC.setTelCte(res.getString("telCte"));
-                objC.setEmailCte(res.getString("emailCte"));
+                objC.setEmailCte(res.getString("email"));
                 listaC.add(objC);
             }
         }catch(Exception e){
