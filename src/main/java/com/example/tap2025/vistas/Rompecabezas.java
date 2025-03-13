@@ -24,7 +24,7 @@ public class Rompecabezas extends Stage {
     private int emptyRow = TAMANO - 1;
     private int emptyCol = TAMANO - 1;
     private Label labelTiempo = new Label("Tiempo: 0s");
-    private Label labelFelicidades = new Label(); // Nuevo label para el mensaje de felicidades
+    private Label labelFelicidades = new Label();
     private int tiempo = 0;
     private Timeline timeline;
     private Image imagen;
@@ -34,7 +34,7 @@ public class Rompecabezas extends Stage {
         mezclarPiezas();
         iniciarTemporizador();
 
-        VBox root = new VBox(labelTiempo, gridPane, labelFelicidades); // Agregar el label de felicidades al VBox
+        VBox root = new VBox(labelTiempo, gridPane, labelFelicidades);
         this.setScene(new Scene(root, 400, 400));
         this.setTitle("Rompecabezas");
         this.show();
@@ -64,27 +64,22 @@ public class Rompecabezas extends Stage {
     private void mezclarPiezas() {
         Random rand = new Random();
 
-        // Realizamos varios movimientos aleatorios para mezclar las piezas
-        for (int i = 0; i < 100; i++) { // 100 movimientos aleatorios para mezclar
-            // Generamos una lista de posibles movimientos: mover hacia arriba, abajo, izquierda, derecha
+        for (int i = 0; i < 100; i++) {
             List<int[]> movimientosPosibles = new ArrayList<>();
-            if (emptyRow > 0) movimientosPosibles.add(new int[]{emptyRow - 1, emptyCol}); // Arriba
-            if (emptyRow < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow + 1, emptyCol}); // Abajo
-            if (emptyCol > 0) movimientosPosibles.add(new int[]{emptyRow, emptyCol - 1}); // Izquierda
-            if (emptyCol < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow, emptyCol + 1}); // Derecha
+            if (emptyRow > 0) movimientosPosibles.add(new int[]{emptyRow - 1, emptyCol});
+            if (emptyRow < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow + 1, emptyCol});
+            if (emptyCol > 0) movimientosPosibles.add(new int[]{emptyRow, emptyCol - 1});
+            if (emptyCol < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow, emptyCol + 1});
 
-            // Seleccionamos un movimiento aleatorio
             int[] movimiento = movimientosPosibles.get(rand.nextInt(movimientosPosibles.size()));
             int nuevaFila = movimiento[0];
             int nuevaCol = movimiento[1];
 
-            // Intercambiamos la pieza vacía con la pieza seleccionada
             int indexPieza = nuevaFila * TAMANO + nuevaCol;
             int indexVacio = emptyRow * TAMANO + emptyCol;
 
             Collections.swap(piezas, indexPieza, indexVacio);
 
-            // Actualizamos la posición del vacío
             emptyRow = nuevaFila;
             emptyCol = nuevaCol;
         }
@@ -122,12 +117,11 @@ public class Rompecabezas extends Stage {
 
             if (esSolucion()) {
                 timeline.stop();
-                // Mostrar un mensaje de "¡Felicidades!" en una ventana emergente
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("¡Felicidades!");
-                alert.setHeaderText(null); // No encabezado
+                alert.setHeaderText(null);
                 alert.setContentText("¡Has completado el rompecabezas en " + tiempo + " segundos!");
-                alert.showAndWait(); // Mostrar y esperar que el usuario cierre
+                alert.showAndWait();
             }
         }
     }

@@ -1,4 +1,5 @@
 package com.example.tap2025.vistas;
+
 import com.example.tap2025.modelos.ClientesDAO;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,26 +17,24 @@ public class Clientes extends Stage {
     private ClientesDAO objC;
     private TableView<ClientesDAO> tbvClientes;
 
-    public Clientes(TableView<ClientesDAO> tbvCte, ClientesDAO obj) {
+    public Clientes(TableView<ClientesDAO> tbvCte, ClientesDAO obj){
         this.tbvClientes = tbvCte;
         CrearUI();
-        if (obj == null) {
-            new ClientesDAO();
-        }else {
+        if( obj == null ){
+            objC = new ClientesDAO();
+        }else{
             objC = obj;
             txtNomCte.setText(objC.getNomCte());
             txtDireccion.setText(objC.getDireccion());
-            txtEmail.setText(obj.getEmailCte());
+            txtEmail.setText(objC.getEmailCte());
             txtTelCte.setText(objC.getTelCte());
         }
         //objC = obj == null ? new ClientesDAO() : obj;
-        CrearUI();
         this.setTitle("Registrar Cliente");
         this.setScene(escena);
         this.show();
     }
-
-    private void CrearUI() {
+    private void CrearUI(){
         txtNomCte = new TextField();
         txtDireccion = new TextField();
         txtTelCte = new TextField();
@@ -46,15 +45,17 @@ public class Clientes extends Stage {
             objC.setDireccion(txtDireccion.getText());
             objC.setTelCte(txtTelCte.getText());
             objC.setEmailCte(txtEmail.getText());
-            if (objC.getIdCte() > 0)
+            if( objC.getIdCte() > 0 )
                 objC.UPDATE();
             else
-            objC.INSERT();
+                objC.INSERT();
             tbvClientes.setItems(objC.SELECT());
             tbvClientes.refresh();
             this.close();
         });
-        vBox = new VBox(txtNomCte, txtDireccion, txtTelCte, txtEmail, btnGuardar);
-        escena = new Scene(vBox, 120, 150);
+        vBox = new VBox(txtNomCte,txtDireccion,txtTelCte,txtEmail,btnGuardar);
+        escena = new Scene(vBox,120,150);
     }
+
+
 }

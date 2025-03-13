@@ -1,5 +1,6 @@
 package com.example.tap2025;
 
+import com.example.tap2025.Componentes.Hilo;
 import com.example.tap2025.modelos.Conexion;
 import com.example.tap2025.vistas.Calculadora;
 import com.example.tap2025.vistas.ListaClientes;
@@ -44,6 +45,12 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        new Hilo("Ruta Pinos").start();
+        new Hilo("Ruta Laureles").start();
+        new Hilo("Ruta San Juan de la Vega").start();
+        new Hilo("Ruta Monte blaco").start();
+        new Hilo("Ruta Teneria").start();
+
         Conexion.create_connection();
         CrearUI(); //Instancia el vertical box
         stage.setTitle("Hola Mundo de Eventos :)");
