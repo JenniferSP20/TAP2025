@@ -55,7 +55,7 @@ public class ClientesDAO {
     }
 
     public void INSERT(){
-        String query = "INSERT INTO clientes(nomCte,telCte,direccion,emailCte) " +
+        String query = "INSERT INTO Cliente(nomCte,telCte,direccion,emailCte) " +
                 "values('"+nomCte+"','"+telCte+"','"+direccion+"','"+emailCte+"')";
         try{
             Statement stmt = Conexion.connection.createStatement();
@@ -65,7 +65,7 @@ public class ClientesDAO {
         }
     }
     public void UPDATE(){
-        String query = "UPDATE clientes SET nomCte = '"+nomCte+"'," +
+        String query = "UPDATE Cliente SET nomCte = '"+nomCte+"'," +
                 "telCte = '"+telCte+"',direccion = '"+direccion+"'," +
                 "emailCte = '"+emailCte+"' WHERE idCte = "+idCte;
         try {
@@ -77,7 +77,7 @@ public class ClientesDAO {
 
     }
     public void DELETE(){
-        String query = "DELETE FROM clientes WHERE idCte = "+idCte;
+        String query = "DELETE FROM Cliente WHERE idCte = "+idCte;
         try{
             Statement stmt = Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -86,7 +86,7 @@ public class ClientesDAO {
         }
     }
     public ObservableList<ClientesDAO> SELECT(){
-        String query = "SELECT * FROM clientes";
+        String query = "SELECT * FROM Cliente";
         ObservableList<ClientesDAO> listaC = FXCollections.observableArrayList();
         ClientesDAO objC;
         try {

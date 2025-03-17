@@ -4,3 +4,11 @@
     -fx-background-size: cover;
     -fx-background-position: center;
 }
+.menu-bar{
+    -fx-background-color: #d3dfff;
+}
+.menu{
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 20;
+
+}

@@ -1,66 +1,66 @@
 package com.example.tap2025;
 
-import com.example.tap2025.Componentes.Hilo;
+import com.example.tap2025.componentes.Hilo;
 import com.example.tap2025.modelos.Conexion;
 import com.example.tap2025.vistas.Calculadora;
+import com.example.tap2025.vistas.Celayork;
 import com.example.tap2025.vistas.ListaClientes;
 import com.example.tap2025.vistas.Rompecabezas;
-import com.example.tap2025.vistas.VentasRestaurante;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.util.Objects;
 
 public class HelloApplication extends Application {
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitCalculadora, mitRestaurante, mitRompecabezas;
+    private MenuItem mitCalculadora, mitRestaurante, mitRompecabeza, mitHilo;
     private Scene escena;
-//CRUD altas bajas y cambios
-    void CrearUI(){
-        mitCalculadora=new MenuItem("Calculadora");
-        mitCalculadora.setOnAction(event -> new Calculadora());
-        mitRestaurante=new MenuItem("Restaurante");
-        mitRestaurante.setOnAction(event -> new ListaClientes());
-        mitRompecabezas=new MenuItem("Rompecabezas");
-        mitRompecabezas.setOnAction(event -> new Rompecabezas());
-        menCompetencia1=new Menu("Competencia 1");
-        menCompetencia1.getItems().addAll(mitCalculadora,mitRestaurante, mitRompecabezas);
-        mnbPrincipal=new MenuBar();
-        mnbPrincipal.getMenus().addAll(menCompetencia1);
-        vBox=new VBox(mnbPrincipal);
-        escena=new Scene(vBox);
-        escena.getStylesheets().add(getClass().getResource("/Styles/main.css").toExternalForm());
+
+    void CrearUI() {
+
+        mitCalculadora = new MenuItem("Calculadora");
+        mitCalculadora.setOnAction(actionEvent -> new Calculadora());
+
+        mitRompecabeza = new MenuItem("Rompecabezas");
+        mitRompecabeza.setOnAction(actionEvent -> new Rompecabezas());
+
+        mitRestaurante = new MenuItem("Restaurante");
+        mitRestaurante.setOnAction(actionEvent -> new ListaClientes());
+
+        mitHilo = new MenuItem("Celayork");
+        mitHilo.setOnAction(actionEvent -> new Celayork());
+
+        menCompetencia1 = new Menu("Competencia 1");
+        menCompetencia1.getItems().addAll(mitCalculadora, mitRestaurante, mitRompecabeza);
+
+        menCompetencia2 = new Menu("Competencia 2");
+        menCompetencia2.getItems().addAll(mitHilo);
+
+        mnbPrincipal = new MenuBar(menCompetencia1, menCompetencia2);
+        vBox = new VBox(mnbPrincipal);
+        escena = new Scene(vBox);
+        String css = getClass().getResource("/Styles/main.Css").toExternalForm();
+        escena.getStylesheets().add(css);
 
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        new Hilo("Ruta Pinos").start();
-        new Hilo("Ruta Laureles").start();
-        new Hilo("Ruta San Juan de la Vega").start();
-        new Hilo("Ruta Monte blaco").start();
-        new Hilo("Ruta Teneria").start();
+    public void start(Stage stage) {
 
-        Conexion.create_connection();
-        CrearUI(); //Instancia el vertical box
-        stage.setTitle("Hola Mundo de Eventos :)");
+        Conexion.createConnection();
+        CrearUI();
+        stage.setTitle("Hola Mundo de Eventos");
         stage.setScene(escena);
-        stage.show();
         stage.setMaximized(true);
-
+        stage.show();
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }

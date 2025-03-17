@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Clientes extends Stage {
+public class Cliente extends Stage {
 
     private Button btnGuardar;
     private TextField txtNomCte, txtDireccion, txtTelCte, txtEmail;
@@ -17,7 +17,7 @@ public class Clientes extends Stage {
     private ClientesDAO objC;
     private TableView<ClientesDAO> tbvClientes;
 
-    public Clientes(TableView<ClientesDAO> tbvCte, ClientesDAO obj){
+    public Cliente(TableView<ClientesDAO> tbvCte, ClientesDAO obj){
         this.tbvClientes = tbvCte;
         CrearUI();
         if( obj == null ){

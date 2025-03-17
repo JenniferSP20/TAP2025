@@ -1,6 +1,6 @@
 package com.example.tap2025.vistas;
 
-import com.example.tap2025.Componentes.ButtonCell;
+import com.example.tap2025.componentes.ButtonCell;
 import com.example.tap2025.modelos.ClientesDAO;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,8 +27,8 @@ public class ListaClientes extends Stage {
     private void CrearUI() {
         tbvClientes = new TableView<>();
         btnAgregar = new Button();
-        btnAgregar.setOnAction(event -> new Clientes(tbvClientes, null));
-        ImageView imv = new ImageView(getClass().getResource("/images/person_add_icon.png").toString());
+        btnAgregar.setOnAction(event -> new Cliente(tbvClientes, null));
+        ImageView imv = new ImageView(getClass().getResource("/Img/3.png").toString());
         imv.setFitWidth(20);
         imv.setFitHeight(20);
         btnAgregar.setGraphic(imv);
