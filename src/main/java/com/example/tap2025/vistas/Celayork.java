@@ -20,6 +20,7 @@ public class Celayork extends Stage {
     private String[] strRutas = { "Ruta Pinos","Ruta Teneria","San Juan de la Vega", "Monte Blanco","Laureles"};
     private Hilo[] thrRutas;
 
+
     public Celayork(){
         CrearUI();
         this.setTitle("Calles de Celaya");
@@ -47,6 +48,8 @@ public class Celayork extends Stage {
             }
         });
         vBox = new VBox(gdpCalles, btnInicar);
+        String css = getClass().getResource("/Styles/Hilos.Css").toExternalForm();
         escena = new Scene(vBox,300,200);
+        escena.getStylesheets().add(css);
     }
 }

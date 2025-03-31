@@ -1,87 +1,107 @@
 package com.example.tap2025.vistas;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+
+import java.io.*;
+import java.util.*;
 
 public class Rompecabezas extends Stage {
     private static final String IMAGEN_PATH = "/Img/2.jpg";
-    private static final int TAMANO = 3; // Tamaño del rompecabezas 3x3
+    private int tamano = 3; // Tamaño inicial
     private List<Pieza> piezas = new ArrayList<>();
     private GridPane gridPane = new GridPane();
-    private int emptyRow = TAMANO - 1;
-    private int emptyCol = TAMANO - 1;
+    private int emptyRow, emptyCol;
     private Label labelTiempo = new Label("Tiempo: 0s");
-    private Label labelFelicidades = new Label();
     private int tiempo = 0;
     private Timeline timeline;
     private Image imagen;
 
     public Rompecabezas() {
-        cargarImagen();
-        mezclarPiezas();
-        iniciarTemporizador();
+        Button btn3x3 = new Button("3x3");
+        Button btn4x4 = new Button("4x4");
+        Button btn5x5 = new Button("5x5");
+        btn3x3.setOnAction(e -> cambiarTamano(3));
+        btn4x4.setOnAction(e -> cambiarTamano(4));
+        btn5x5.setOnAction(e -> cambiarTamano(5));
+        HBox botones = new HBox(10, btn3x3, btn4x4, btn5x5);
 
-        VBox root = new VBox(labelTiempo, gridPane, labelFelicidades);
-        this.setScene(new Scene(root, 400, 400));
+        iniciarJuego();
+        VBox root = new VBox(labelTiempo, botones, gridPane);
+        this.setScene(new Scene(root, 450, 450));
         this.setTitle("Rompecabezas");
         this.show();
     }
 
-    private void cargarImagen() {
-        imagen = new Image(getClass().getResourceAsStream(IMAGEN_PATH));
-        double anchoPieza = imagen.getWidth() / TAMANO;
-        double altoPieza = imagen.getHeight() / TAMANO;
+    private void iniciarJuego() {
+        cargarImagen();
+        mezclarPiezas();
+        iniciarTemporizador();
+    }
 
-        for (int fila = 0; fila < TAMANO; fila++) {
-            for (int col = 0; col < TAMANO; col++) {
-                if (fila == TAMANO - 1 && col == TAMANO - 1) {
-                    piezas.add(null); // Espacio vacío
+    private void iniciarTemporizador() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        tiempo = 0;
+        labelTiempo.setText("Tiempo: 0s");
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            tiempo++;
+            labelTiempo.setText("Tiempo: " + tiempo + "s");
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void cargarImagen() {
+        piezas.clear();
+        imagen = new Image(getClass().getResourceAsStream(IMAGEN_PATH));
+        double anchoPieza = imagen.getWidth() / tamano;
+        double altoPieza = imagen.getHeight() / tamano;
+
+        for (int fila = 0; fila < tamano; fila++) {
+            for (int col = 0; col < tamano; col++) {
+                if (fila == tamano - 1 && col == tamano - 1) {
+                    piezas.add(null);
+                    emptyRow = fila;
+                    emptyCol = col;
                     continue;
                 }
                 ImageView piezaView = new ImageView(imagen);
                 piezaView.setViewport(new javafx.geometry.Rectangle2D(col * anchoPieza, fila * altoPieza, anchoPieza, altoPieza));
-                piezaView.setFitWidth(400 / TAMANO);
-                piezaView.setFitHeight(400 / TAMANO);
+                piezaView.setFitWidth(400 / tamano);
+                piezaView.setFitHeight(400 / tamano);
                 piezaView.setOnMouseClicked(this::moverPieza);
                 piezas.add(new Pieza(piezaView, fila, col));
             }
         }
+        actualizarGrid();
     }
 
     private void mezclarPiezas() {
         Random rand = new Random();
-
         for (int i = 0; i < 100; i++) {
             List<int[]> movimientosPosibles = new ArrayList<>();
             if (emptyRow > 0) movimientosPosibles.add(new int[]{emptyRow - 1, emptyCol});
-            if (emptyRow < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow + 1, emptyCol});
+            if (emptyRow < tamano - 1) movimientosPosibles.add(new int[]{emptyRow + 1, emptyCol});
             if (emptyCol > 0) movimientosPosibles.add(new int[]{emptyRow, emptyCol - 1});
-            if (emptyCol < TAMANO - 1) movimientosPosibles.add(new int[]{emptyRow, emptyCol + 1});
+            if (emptyCol < tamano - 1) movimientosPosibles.add(new int[]{emptyRow, emptyCol + 1});
 
             int[] movimiento = movimientosPosibles.get(rand.nextInt(movimientosPosibles.size()));
-            int nuevaFila = movimiento[0];
-            int nuevaCol = movimiento[1];
-
-            int indexPieza = nuevaFila * TAMANO + nuevaCol;
-            int indexVacio = emptyRow * TAMANO + emptyCol;
+            int indexPieza = movimiento[0] * tamano + movimiento[1];
+            int indexVacio = emptyRow * tamano + emptyCol;
 
             Collections.swap(piezas, indexPieza, indexVacio);
-
-            emptyRow = nuevaFila;
-            emptyCol = nuevaCol;
+            emptyRow = movimiento[0];
+            emptyCol = movimiento[1];
         }
         actualizarGrid();
     }
@@ -89,14 +109,35 @@ public class Rompecabezas extends Stage {
     private void actualizarGrid() {
         gridPane.getChildren().clear();
         int index = 0;
-        for (int fila = 0; fila < TAMANO; fila++) {
-            for (int col = 0; col < TAMANO; col++) {
+        for (int fila = 0; fila < tamano; fila++) {
+            for (int col = 0; col < tamano; col++) {
                 Pieza pieza = piezas.get(index++);
                 if (pieza != null) {
                     gridPane.add(pieza.imageView, col, fila);
                 }
             }
         }
+    }
+
+    private void guardarTiempo() {
+        try (FileWriter writer = new FileWriter("tiempos.txt", true)) {
+            writer.write("Tamaño " + tamano + "x" + tamano + " - " + tiempo + "s\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean esSolucion() {
+        for (int i = 0; i < piezas.size(); i++) {
+            Pieza pieza = piezas.get(i);
+            if (pieza == null) continue;
+            int filaEsperada = i / tamano;
+            int colEsperada = i % tamano;
+            if (pieza.filaOriginal != filaEsperada || pieza.colOriginal != colEsperada) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void moverPieza(MouseEvent event) {
@@ -106,9 +147,8 @@ public class Rompecabezas extends Stage {
 
         if ((Math.abs(filaPieza - emptyRow) == 1 && colPieza == emptyCol) ||
                 (Math.abs(colPieza - emptyCol) == 1 && filaPieza == emptyRow)) {
-
-            int indexPieza = filaPieza * TAMANO + colPieza;
-            int indexVacio = emptyRow * TAMANO + emptyCol;
+            int indexPieza = filaPieza * tamano + colPieza;
+            int indexVacio = emptyRow * tamano + emptyCol;
 
             Collections.swap(piezas, indexPieza, indexVacio);
             emptyRow = filaPieza;
@@ -117,6 +157,7 @@ public class Rompecabezas extends Stage {
 
             if (esSolucion()) {
                 timeline.stop();
+                guardarTiempo();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("¡Felicidades!");
                 alert.setHeaderText(null);
@@ -126,26 +167,9 @@ public class Rompecabezas extends Stage {
         }
     }
 
-    private boolean esSolucion() {
-        for (int i = 0; i < piezas.size(); i++) {
-            Pieza pieza = piezas.get(i);
-            if (pieza == null) continue;
-            int filaEsperada = i / TAMANO;
-            int colEsperada = i % TAMANO;
-            if (pieza.filaOriginal != filaEsperada || pieza.colOriginal != colEsperada) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void iniciarTemporizador() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            tiempo++;
-            labelTiempo.setText("Tiempo: " + tiempo + "s");
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+    private void cambiarTamano(int nuevoTamano) {
+        this.tamano = nuevoTamano;
+        iniciarJuego();
     }
 
     private static class Pieza {

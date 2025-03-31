@@ -46,25 +46,7 @@ public class Calculadora extends Stage {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 arBtnTeclado[i][j] = new Button(strTeclas[pos]);
-                if (strTeclas[pos].equals("*")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-                if (strTeclas[pos].equals("+")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-                if (strTeclas[pos].equals("/")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-                if (strTeclas[pos].equals("=")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-                if (strTeclas[pos].equals(".")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-                if (strTeclas[pos].equals("-")) {
-                    arBtnTeclado[i][j].setId("fontButton");
-                }
-
+                arBtnTeclado[i][j].setId("fontButton");
                 int finalPos = pos;
                 arBtnTeclado[i][j].setOnAction(e -> EventoTeclado(strTeclas[finalPos]));
                 arBtnTeclado[i][j].setPrefSize(50, 50);
@@ -86,7 +68,16 @@ public class Calculadora extends Stage {
             } else {
                 txtDisplay.setText(txtDisplay.getText().equals("0") ? strTecla : txtDisplay.getText() + strTecla);
             }
-        } else if (strTecla.matches("[+\\-*/]")) {
+        } else if (strTecla.equals("-")) {
+            if (txtDisplay.getText().equals("0") || nuevaOperacion) {
+                txtDisplay.setText("-");
+                nuevaOperacion = false;
+            } else if (!txtDisplay.getText().contains("-")) {
+                operador = "-";
+                num1 = Double.parseDouble(txtDisplay.getText());
+                txtDisplay.setText("0");
+            }
+        } else if (strTecla.matches("[+*/]")) {
             operador = strTecla;
             num1 = Double.parseDouble(txtDisplay.getText());
             txtDisplay.setText("0");

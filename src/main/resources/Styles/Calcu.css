@@ -30,3 +30,10 @@
     -fx-padding: 5px;
     -fx-alignment: center-right;
 }
+.text-field{
+    -fx-border-color: #5e7ffd;
+    -fx-font-family: "Cambria Math";
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+
+}
