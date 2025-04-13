@@ -156,7 +156,6 @@ public class Rompecabezas extends Stage {
             actualizarGrid();
 
             if (esSolucion()) {
-                timeline.stop();
                 guardarTiempo();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("¡Felicidades!");

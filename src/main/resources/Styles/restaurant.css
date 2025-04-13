@@ -1,0 +1,30 @@
+/* Fondo general */
+.root {
+    -fx-background-color: #fdf6e3;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}
+
+/* Botones */
+.button {
+    -fx-background-color: #f4a261;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #e76f51;
+}
+
+/* ListViews */
+.list-view {
+    -fx-background-color: #fffbe6;
+    -fx-border-color: #f4a261;
+    -fx-border-radius: 5;
+}
