@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class Mesa extends Stage {
 
     private Button btnGuardar;
-    private TextField txtIdMesa, txtCapacidad;
+    private TextField txtCapacidad;
     private CheckBox chkOcupado;
     private VBox vBox;
     private Scene escena;
@@ -26,7 +26,6 @@ public class Mesa extends Stage {
             objM = new MesaDAO();
         } else {
             objM = obj;
-            txtIdMesa.setText(String.valueOf(objM.getIdMesa()));
             txtCapacidad.setText(String.valueOf(objM.getCapacidad()));
             chkOcupado.setSelected(objM.isOcupado());
         }
@@ -36,20 +35,16 @@ public class Mesa extends Stage {
     }
 
     private void CrearUI() {
-        txtIdMesa = new TextField();
-        txtIdMesa.setPromptText("ID Mesa");
         txtCapacidad = new TextField();
         txtCapacidad.setPromptText("Capacidad");
         chkOcupado = new CheckBox("Ocupado");
         btnGuardar = new Button("Guardar");
 
         btnGuardar.setOnAction(event -> {
-            objM.setIdMesa(Integer.parseInt(txtIdMesa.getText()));
             objM.setCapacidad(Integer.parseInt(txtCapacidad.getText()));
             objM.setOcupado(chkOcupado.isSelected());
-
-            if (objM.getIdMesa() > 0) {
-                objM.UPDATE_OCUPADO();
+            if (objM.getidMesa() > 0) {
+                objM.UPDATE();
             } else {
                 objM.INSERT();
             }
@@ -59,7 +54,7 @@ public class Mesa extends Stage {
             this.close();
         });
 
-        vBox = new VBox(txtIdMesa, txtCapacidad, chkOcupado, btnGuardar);
+        vBox = new VBox(txtCapacidad, chkOcupado, btnGuardar);
         escena = new Scene(vBox, 200, 200);
     }
 }

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class Orden extends Stage {
 
     private Button btnGuardar;
-    private TextField txtDetalles, txtMesa, txtEmpleado, txtFecha, txtTotal;
+    private TextField txtDetalles, txtMesa,txtCliente , txtEmpleado, txtFecha, txtTotal;
     private VBox vBox;
     private Scene escena;
     private OrdenDAO objO;
@@ -26,8 +26,9 @@ public class Orden extends Stage {
         } else {
             objO = obj;
             txtDetalles.setText(objO.getDetallesOrden());
-            txtMesa.setText(String.valueOf(objO.getIdMesa()));
+            txtMesa.setText(String.valueOf(objO.getidMesa()));
             txtEmpleado.setText(String.valueOf(objO.getId_Empleado()));
+            txtCliente.setText(String.valueOf(objO.getidCte()));
             txtFecha.setText(objO.getFecha());
             txtTotal.setText(String.valueOf(objO.getTotal()));
         }
@@ -40,21 +41,26 @@ public class Orden extends Stage {
         txtDetalles = new TextField();
         txtMesa = new TextField();
         txtEmpleado = new TextField();
+        txtCliente = new TextField();
         txtFecha = new TextField();
         txtTotal = new TextField();
         btnGuardar = new Button("Guardar");
         btnGuardar.setOnAction(event -> {
             objO.setDetallesOrden(txtDetalles.getText());
-            objO.setIdMesa(Integer.parseInt(txtMesa.getText()));
-            objO.setIdEmpleado(Integer.parseInt(txtEmpleado.getText()));
+            objO.setidMesa(Integer.parseInt(txtMesa.getText()));
+            objO.setId_Empleado(Integer.parseInt(txtEmpleado.getText()));
+            objO.setidCte(Integer.parseInt(txtCliente.getText()));
             objO.setFecha(txtFecha.getText());
             objO.setTotal(Double.parseDouble(txtTotal.getText()));
-            objO.INSERT();
+            if( objO.getId_Orden() > 0 )
+                objO.UPDATE();
+            else
+                objO.INSERT();
             tbvOrdenes.setItems(objO.SELECT());
             tbvOrdenes.refresh();
             this.close();
         });
-        vBox = new VBox(txtDetalles, txtMesa, txtEmpleado, txtFecha, txtTotal, btnGuardar);
+        vBox = new VBox(txtDetalles, txtMesa, txtEmpleado, txtCliente, txtFecha, txtTotal, btnGuardar);
         escena = new Scene(vBox, 200, 200);
     }
 }

@@ -28,15 +28,11 @@ public class ListaOrden extends Stage {
     private void CrearUI() {
         tbvOrdenes = new TableView<>();
         btnAgregar = new Button();
-        btnAgregar.setOnAction(event -> {
-            // Aquí puedes abrir una ventana para registrar nueva orden
-            // new Orden(tbvOrdenes, null);
-        });
+        btnAgregar.setOnAction(event -> new Orden(tbvOrdenes, null));
         ImageView imv = new ImageView(getClass().getResource("/Img/3.png").toString());
         imv.setFitWidth(20);
         imv.setFitHeight(20);
         btnAgregar.setGraphic(imv);
-
         tlbMenu = new ToolBar(btnAgregar);
         CreateTable();
         vBox = new VBox(tlbMenu, tbvOrdenes);
@@ -45,9 +41,6 @@ public class ListaOrden extends Stage {
 
     private void CreateTable() {
         OrdenDAO objO = new OrdenDAO();
-
-        TableColumn<OrdenDAO, Integer> tbcId = new TableColumn<>("ID");
-        tbcId.setCellValueFactory(new PropertyValueFactory<>("Id_Orden"));
 
         TableColumn<OrdenDAO, String> tbcDetalles = new TableColumn<>("Detalles");
         tbcDetalles.setCellValueFactory(new PropertyValueFactory<>("detallesOrden"));
@@ -84,7 +77,7 @@ public class ListaOrden extends Stage {
             }
         });
 
-        tbvOrdenes.getColumns().addAll(tbcId, tbcDetalles, tbcMesa, tbcEmpleado, tbcCliente, tbcFecha, tbcTotal, tbcEditar, tbcEliminar);
+        tbvOrdenes.getColumns().addAll( tbcDetalles, tbcMesa, tbcEmpleado, tbcCliente, tbcFecha, tbcTotal, tbcEditar, tbcEliminar);
         tbvOrdenes.setItems(objO.SELECT());
     }
 }

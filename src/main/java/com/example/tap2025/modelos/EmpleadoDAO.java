@@ -29,11 +29,6 @@ public class EmpleadoDAO {
         this.Id_Empleado = Id_Empleado;
     }
 
-    // Método adicional para compatibilidad con otras clases
-    public int getIdEmpleado() {
-        return Id_Empleado;
-    }
-
     public String getNombre() {
         return Nombre;
     }

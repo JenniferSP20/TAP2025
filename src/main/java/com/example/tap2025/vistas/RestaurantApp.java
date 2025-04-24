@@ -22,7 +22,7 @@ public class RestaurantApp extends Stage {
     private ListView<String> listaOrden;
     private ComboBox<Integer> comboCantidad;
     private ComboBox<EmpleadoDAO> comboEmpleados;
-    private ComboBox<ClientesDAO> comboClientes; // Nuevo ComboBox para clientes
+    private ComboBox<ClientesDAO> comboClientes;
     private Label lblTotal;
     private double total = 0.0;
     private int mesaSeleccionada = -1;
@@ -62,35 +62,33 @@ public class RestaurantApp extends Stage {
         this.show();
     }
 
-    private TextField campoActivo; // Variable para rastrear el campo activo
+    private TextField campoActivo;
 
     private VBox crearTecladoConLetras() {
         VBox panelTeclado = new VBox(10);
         panelTeclado.setPadding(new Insets(10));
         panelTeclado.setAlignment(Pos.TOP_CENTER);
 
-        // Campos de registro (no editables directamente)
         TextField txtNomCte = new TextField();
         txtNomCte.setPromptText("Nombre");
-        txtNomCte.setEditable(false); // Deshabilita el teclado físico
-        txtNomCte.setOnMouseClicked(e -> campoActivo = txtNomCte); // Establece el campo activo
+        txtNomCte.setEditable(false);
+        txtNomCte.setOnMouseClicked(e -> campoActivo = txtNomCte);
 
         TextField txtTelCte = new TextField();
         txtTelCte.setPromptText("Teléfono");
-        txtTelCte.setEditable(false); // Deshabilita el teclado físico
-        txtTelCte.setOnMouseClicked(e -> campoActivo = txtTelCte); // Establece el campo activo
+        txtTelCte.setEditable(false);
+        txtTelCte.setOnMouseClicked(e -> campoActivo = txtTelCte);
 
         TextField txtDireccion = new TextField();
         txtDireccion.setPromptText("Dirección");
-        txtDireccion.setEditable(false); // Deshabilita el teclado físico
-        txtDireccion.setOnMouseClicked(e -> campoActivo = txtDireccion); // Establece el campo activo
+        txtDireccion.setEditable(false);
+        txtDireccion.setOnMouseClicked(e -> campoActivo = txtDireccion);
 
         TextField txtEmail = new TextField();
         txtEmail.setPromptText("Email");
-        txtEmail.setEditable(false); // Deshabilita el teclado físico
-        txtEmail.setOnMouseClicked(e -> campoActivo = txtEmail); // Establece el campo activo
+        txtEmail.setEditable(false);
+        txtEmail.setOnMouseClicked(e -> campoActivo = txtEmail);
 
-        // Teclado virtual
         GridPane teclado = new GridPane();
         teclado.setHgap(5);
         teclado.setVgap(5);
@@ -108,7 +106,6 @@ public class RestaurantApp extends Stage {
         agregarFilaTeclado(teclado, fila4, 3);
         agregarFilaTeclado(teclado, fila5, 4);
 
-        // Botones de acción
         Button btnBorrar = new Button("Borrar");
         btnBorrar.setOnAction(e -> {
             if (campoActivo != null && !campoActivo.getText().isEmpty()) {
@@ -137,14 +134,12 @@ public class RestaurantApp extends Stage {
                 txtDireccion.clear();
                 txtEmail.clear();
 
-                // Actualizar el ComboBox de clientes
                 comboClientes.setItems(FXCollections.observableArrayList(new ClientesDAO().SELECT()));
             } else {
                 mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Por favor, completa toda la información.");
             }
         });
 
-        // Agregar elementos al panel
         panelTeclado.getChildren().addAll(txtNomCte, txtTelCte, txtDireccion, txtEmail, teclado, btnBorrar, btnGuardar);
         return panelTeclado;
     }
@@ -307,9 +302,9 @@ public class RestaurantApp extends Stage {
 
         OrdenDAO orden = new OrdenDAO();
         orden.setDetallesOrden(detalles.toString());
-        orden.setIdMesa(mesaSeleccionada);
-        orden.setIdEmpleado(comboEmpleados.getValue().getId_Empleado());
-        orden.setidCte(comboClientes.getValue().getIdCte()); // Asignar el cliente seleccionado
+        orden.setidMesa(mesaSeleccionada);
+        orden.setId_Empleado(comboEmpleados.getValue().getId_Empleado());
+        orden.setidCte(comboClientes.getValue().getIdCte());
 
         String fechaActual = java.time.LocalDateTime.now()
                 .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -327,7 +322,7 @@ public class RestaurantApp extends Stage {
         total = 0;
         actualizarTotal();
 
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Orden Finalizada", "¡Tu orden (ID " + orden.getId_Orden() + ") ha sido guardada exitosamente!");
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Orden Finalizada", "¡Tu orden ha sido guardada exitosamente!");
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
@@ -374,21 +369,21 @@ public class RestaurantApp extends Stage {
         ObservableList<MesaDAO> listaMesas = mesaDao.SELECT();
 
         Map<Integer, Button> mapaBotonesMesas = new HashMap<>();
-        Map<Integer, Integer> capacidadMesas = new HashMap<>(); // Mapa para almacenar la capacidad de cada mesa
+        Map<Integer, Integer> capacidadMesas = new HashMap<>();
         int columnas = 5;
         HBox filaActual = new HBox(5);
         int count = 0;
 
         for (MesaDAO mesa : listaMesas) {
-            Button btnMesa = new Button(String.valueOf(mesa.getIdMesa()));
+            Button btnMesa = new Button(String.valueOf(mesa.getidMesa()));
             btnMesa.setPrefSize(40, 40);
 
             btnMesa.setOnAction(e -> {
-                mesaSeleccionada = mesa.getIdMesa();
+                mesaSeleccionada = mesa.getidMesa();
             });
 
-            mapaBotonesMesas.put(mesa.getIdMesa(), btnMesa);
-            capacidadMesas.put(mesa.getIdMesa(), mesa.getCapacidad()); // Almacenar la capacidad de la mesa
+            mapaBotonesMesas.put(mesa.getidMesa(), btnMesa);
+            capacidadMesas.put(mesa.getidMesa(), mesa.getCapacidad());
             filaActual.getChildren().add(btnMesa);
             count++;
 
@@ -409,8 +404,8 @@ public class RestaurantApp extends Stage {
         Button btnCancelar = new Button("❌");
         Button btnAyuda = new Button("¿?");
 
-        Label lblCapacidad = new Label(); // Label para mostrar la capacidad de la mesa seleccionada
-        lblCapacidad.setFont(Font.font("Arial", 14));
+        Label lblCapacidad = new Label();
+        lblCapacidad.setFont(Font.font("Arial", 12));
         panelMesas.getChildren().add(lblCapacidad);
 
         btnConfirmar.setOnAction(e -> {
@@ -429,7 +424,7 @@ public class RestaurantApp extends Stage {
                     btn.setStyle("");
                 }
                 mesaSeleccionada = -1;
-                lblCapacidad.setText(""); // Limpiar el label de capacidad
+                lblCapacidad.setText("");
             }
         });
 

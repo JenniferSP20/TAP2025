@@ -41,8 +41,6 @@ public class ListaMesas extends Stage {
 
     private void CreateTable() {
         MesaDAO objM = new MesaDAO();
-        TableColumn<MesaDAO, Integer> tbcIdMesa = new TableColumn<>("ID Mesa");
-        tbcIdMesa.setCellValueFactory(new PropertyValueFactory<>("idMesa"));
 
         TableColumn<MesaDAO, Integer> tbcCapacidad = new TableColumn<>("Capacidad");
         tbcCapacidad.setCellValueFactory(new PropertyValueFactory<>("capacidad"));
@@ -66,7 +64,7 @@ public class ListaMesas extends Stage {
             }
         });
 
-        tbvMesas.getColumns().addAll(tbcIdMesa, tbcCapacidad, tbcOcupado, tbcEditar, tbcEliminar);
+        tbvMesas.getColumns().addAll(tbcCapacidad, tbcOcupado, tbcEditar, tbcEliminar);
         tbvMesas.setItems(objM.SELECT());
     }
 }

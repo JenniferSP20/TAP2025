@@ -15,7 +15,7 @@ public class HelloApplication extends Application {
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitCalculadora, mitC, mitE, mitP, mitM, mitRompecabeza, mitHilo, mitRestaurantApp;
+    private MenuItem mitCalculadora, mitC, mitE, mitP, mitM,mitO, mitRompecabeza, mitHilo, mitRestaurantApp;
     private Scene escena;
 
     void CrearUI() {
@@ -38,6 +38,9 @@ public class HelloApplication extends Application {
         mitM = new MenuItem("ListaM");
         mitM.setOnAction(actionEvent -> new ListaMesas());
 
+        mitO = new MenuItem("ListaO");
+        mitO.setOnAction(actionEvent -> new ListaOrden());
+
         mitHilo = new MenuItem("Celayork");
         mitHilo.setOnAction(actionEvent -> new Celayork());
 
@@ -45,7 +48,7 @@ public class HelloApplication extends Application {
         mitRestaurantApp.setOnAction(actionEvent -> new RestaurantApp());
 
         menCompetencia1 = new Menu("Competencia 1");
-        menCompetencia1.getItems().addAll(mitCalculadora, mitC, mitE,mitP,mitM,mitRestaurantApp, mitRompecabeza);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitC, mitE,mitP,mitM, mitO, mitRestaurantApp, mitRompecabeza);
 
         menCompetencia2 = new Menu("Competencia 2");
         menCompetencia2.getItems().addAll(mitHilo);
