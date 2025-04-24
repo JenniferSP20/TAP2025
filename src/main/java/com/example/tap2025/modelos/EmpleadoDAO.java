@@ -8,141 +8,182 @@ import java.sql.Statement;
 
 public class EmpleadoDAO {
 
-    private int idEmpleado;
-    private String nombre;
-    private String apellido1;
-    private String apellido2;
-    private String curp;
-    private String rfc;
-    private String nss;
-    private double sueldo;
-    private String puesto;
-    private String noContacto;
-    private String horario;
-    private String fechaIngreso;
+    private int Id_Empleado;
+    private String Nombre;
+    private String Apellido1;
+    private String Apellido2;
+    private String CURP;
+    private String RFC;
+    private String NSS;
+    private double Sueldo;
+    private String Puesto;
+    private String NoContacto;
+    private String Horario;
+    private String FechaIngreso;
 
-    public int getIdEmpleado() {
-        return idEmpleado;
+    public int getId_Empleado() {
+        return Id_Empleado;
     }
 
-    public void setIdEmpleado(int idEmpleado) {
-        this.idEmpleado = idEmpleado;
+    public void setId_Empleado(int Id_Empleado) {
+        this.Id_Empleado = Id_Empleado;
+    }
+
+    // Método adicional para compatibilidad con otras clases
+    public int getIdEmpleado() {
+        return Id_Empleado;
     }
 
     public String getNombre() {
-        return nombre;
+        return Nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
     }
 
     public String getApellido1() {
-        return apellido1;
+        return Apellido1;
     }
 
-    public void setApellido1(String apellido1) {
-        this.apellido1 = apellido1;
+    public void setApellido1(String Apellido1) {
+        this.Apellido1 = Apellido1;
     }
 
     public String getApellido2() {
-        return apellido2;
+        return Apellido2;
     }
 
-    public void setApellido2(String apellido2) {
-        this.apellido2 = apellido2;
+    public void setApellido2(String Apellido2) {
+        this.Apellido2 = Apellido2;
     }
 
-    public String getCurp() {
-        return curp;
+    public String getCURP() {
+        return CURP;
     }
 
-    public void setCurp(String curp) {
-        this.curp = curp;
+    public void setCURP(String CURP) {
+        this.CURP = CURP;
     }
 
-    public String getRfc() {
-        return rfc;
+    public String getRFC() {
+        return RFC;
     }
 
-    public void setRfc(String rfc) {
-        this.rfc = rfc;
+    public void setRFC(String RFC) {
+        this.RFC = RFC;
     }
 
-    public String getNss() {
-        return nss;
+    public String getNSS() {
+        return NSS;
     }
 
-    public void setNss(String nss) {
-        this.nss = nss;
+    public void setNSS(String NSS) {
+        this.NSS = NSS;
     }
 
-    public double getSueldo() {
-        return sueldo;
+    public String getSueldo() {
+        return String.valueOf(Sueldo);
     }
 
-    public void setSueldo(double sueldo) {
-        this.sueldo = sueldo;
+    public void setSueldo(double Sueldo) {
+        this.Sueldo = Sueldo;
     }
 
     public String getPuesto() {
-        return puesto;
+        return Puesto;
     }
 
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setPuesto(String Puesto) {
+        this.Puesto = Puesto;
     }
 
     public String getNoContacto() {
-        return noContacto;
+        return NoContacto;
     }
 
-    public void setNoContacto(String noContacto) {
-        this.noContacto = noContacto;
+    public void setNoContacto(String NoContacto) {
+        this.NoContacto = NoContacto;
     }
 
     public String getHorario() {
-        return horario;
+        return Horario;
     }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
+    public void setHorario(String Horario) {
+        this.Horario = Horario;
     }
 
     public String getFechaIngreso() {
-        return fechaIngreso;
+        return FechaIngreso;
     }
 
-    public void setFechaIngreso(String fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
+    public void setFechaIngreso(String FechaIngreso) {
+        this.FechaIngreso = FechaIngreso;
+    }
+
+    public void INSERT() {
+        String query = "INSERT INTO empleados(nombre, apellido1, apellido2, CURP, RFC, NSS, sueldo, puesto, noContacto, horario, fechaIngreso) " +
+                "VALUES('" + Nombre + "', '" + Apellido1 + "', '" + Apellido2 + "', '" + CURP + "', '" + RFC + "', '" + NSS + "', " + Sueldo + ", '" + Puesto + "', '" + NoContacto + "', '" + Horario + "', '" + FechaIngreso + "')";
+        try {
+            Statement stmt = Conexion.connection.createStatement();
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void UPDATE() {
+        String query = "UPDATE empleados SET nombre = '" + Nombre + "', apellido1 = '" + Apellido1 + "', apellido2 = '" + Apellido2 + "', CURP = '" + CURP + "', RFC = '" + RFC + "', NSS = '" + NSS + "', sueldo = " + Sueldo + ", puesto = '" + Puesto + "', noContacto = '" + NoContacto + "', horario = '" + Horario + "', fechaIngreso = '" + FechaIngreso + "' WHERE Id_Empleado = " + Id_Empleado;
+        try {
+            Statement stmt = Conexion.connection.createStatement();
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DELETE() {
+        String query = "DELETE FROM empleados WHERE Id_Empleado = " + Id_Empleado;
+        try {
+            Statement stmt = Conexion.connection.createStatement();
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public ObservableList<EmpleadoDAO> SELECT() {
         String query = "SELECT * FROM empleados";
-        ObservableList<EmpleadoDAO> lista = FXCollections.observableArrayList();
-        EmpleadoDAO obj;
+        ObservableList<EmpleadoDAO> listaE = FXCollections.observableArrayList();
+        EmpleadoDAO objE;
         try {
             Statement stmt = Conexion.connection.createStatement();
             ResultSet res = stmt.executeQuery(query);
             while (res.next()) {
-                obj = new EmpleadoDAO();
-                obj.setIdEmpleado(res.getInt("Id_Empleado"));
-                obj.setNombre(res.getString("nombre"));
-                obj.setApellido1(res.getString("apellido1"));
-                obj.setApellido2(res.getString("apellido2"));
-                obj.setCurp(res.getString("CURP"));
-                obj.setRfc(res.getString("RFC"));
-                obj.setNss(res.getString("NSS"));
-                obj.setSueldo(res.getDouble("sueldo"));
-                obj.setPuesto(res.getString("puesto"));
-                obj.setNoContacto(res.getString("noContacto"));
-                obj.setHorario(res.getString("horario"));
-                obj.setFechaIngreso(res.getString("fechaIngreso"));
-                lista.add(obj);
+                objE = new EmpleadoDAO();
+                objE.setId_Empleado(res.getInt("Id_Empleado"));
+                objE.setNombre(res.getString("nombre"));
+                objE.setApellido1(res.getString("apellido1"));
+                objE.setApellido2(res.getString("apellido2"));
+                objE.setCURP(res.getString("CURP"));
+                objE.setRFC(res.getString("RFC"));
+                objE.setNSS(res.getString("NSS"));
+                objE.setSueldo(res.getDouble("sueldo"));
+                objE.setPuesto(res.getString("puesto"));
+                objE.setNoContacto(res.getString("noContacto"));
+                objE.setHorario(res.getString("horario"));
+                objE.setFechaIngreso(res.getString("fechaIngreso"));
+                listaE.add(objE);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return lista;
+        return listaE;
+    }
+
+    @Override
+    public String toString() {
+        return Nombre + " " + Apellido1;
     }
 }

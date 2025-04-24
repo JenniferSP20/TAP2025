@@ -8,20 +8,20 @@ import java.sql.Statement;
 
 public class OrdenDAO {
 
-    private int idOrden;
+    private int Id_Orden;
     private String detallesOrden;
     private int idMesa;
-    private int idEmpleado;
-    private int idCliente;
+    private int Id_Empleado;
+    private int idCte;
     private String fecha;
     private double total;
 
-    public int getIdOrden() {
-        return idOrden;
+    public int getId_Orden() {
+        return Id_Orden;
     }
 
-    public void setIdOrden(int idOrden) {
-        this.idOrden = idOrden;
+    public void setId_Orden(int Id_Orden) {
+        this.Id_Orden = Id_Orden;
     }
 
     public String getDetallesOrden() {
@@ -40,20 +40,20 @@ public class OrdenDAO {
         this.idMesa = idMesa;
     }
 
-    public int getIdEmpleado() {
-        return idEmpleado;
+    public int getId_Empleado() {
+        return Id_Empleado;
     }
 
-    public void setIdEmpleado(int idEmpleado) {
-        this.idEmpleado = idEmpleado;
+    public void setIdEmpleado(int Id_Empleado) {
+        this.Id_Empleado = Id_Empleado;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public int getidCte() {
+        return idCte;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setidCte(int idCte) {
+        this.idCte = idCte;
     }
 
     public String getFecha() {
@@ -71,10 +71,31 @@ public class OrdenDAO {
     public void setTotal(double total) {
         this.total = total;
     }
+    public void UPDATE(){
+        String query = "UPDATE orden SET detallesOrden = '"+detallesOrden+"'," +
+                "idMesa = '"+idMesa+"',Id_Empleado = '"+Id_Empleado+"'," +
+                "idCte = '"+idCte+"',"+"fecha = '"+fecha+"', "+"total = '"+total+"', WHERE Id_Orden = "+Id_Orden;
+        try {
+            Statement stmt = Conexion.connection.createStatement();
+            stmt.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public void DELETE(){
+        String query = "DELETE FROM orden WHERE Id_Orden = "+Id_Orden;
+        try{
+            Statement stmt = Conexion.connection.createStatement();
+            stmt.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void INSERT() {
-        String query = "INSERT INTO orden(detallesOrden, Id_Mesa, Id_Empleado, Id_Cliente, fecha, total) " +
-                "VALUES('" + detallesOrden + "'," + idMesa + "," + idEmpleado + "," + idCliente + ",'" + fecha + "'," + total + ")";
+        String query = "INSERT INTO orden(detallesOrden, Id_Mesa, Id_Empleado, idCte, fecha, total) " +
+                "VALUES('" + detallesOrden + "'," + idMesa + "," + Id_Empleado + "," + idCte + ",'" + fecha + "'," + total + ")";
         try {
             Statement stmt = Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -85,25 +106,25 @@ public class OrdenDAO {
 
     public ObservableList<OrdenDAO> SELECT() {
         String query = "SELECT * FROM orden";
-        ObservableList<OrdenDAO> lista = FXCollections.observableArrayList();
-        OrdenDAO obj;
+        ObservableList<OrdenDAO> listaO = FXCollections.observableArrayList();
+        OrdenDAO objO;
         try {
             Statement stmt = Conexion.connection.createStatement();
             ResultSet res = stmt.executeQuery(query);
             while (res.next()) {
-                obj = new OrdenDAO();
-                obj.setIdOrden(res.getInt("Id_Orden"));
-                obj.setDetallesOrden(res.getString("detallesOrden"));
-                obj.setIdMesa(res.getInt("Id_Mesa"));
-                obj.setIdEmpleado(res.getInt("Id_Empleado"));
-                obj.setIdCliente(res.getInt("Id_Cliente"));
-                obj.setFecha(res.getString("fecha"));
-                obj.setTotal(res.getDouble("total"));
-                lista.add(obj);
+                objO = new OrdenDAO();
+                objO.setId_Orden(res.getInt("Id_Orden"));
+                objO.setDetallesOrden(res.getString("detallesOrden"));
+                objO.setIdMesa(res.getInt("Id_Mesa"));
+                objO.setIdEmpleado(res.getInt("Id_Empleado"));
+                objO.setidCte(res.getInt("idCte"));
+                objO.setFecha(res.getString("fecha"));
+                objO.setTotal(res.getDouble("total"));
+                listaO.add(objO);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return lista;
+        return listaO;
     }
 }

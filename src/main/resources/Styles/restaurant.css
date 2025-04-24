@@ -1,30 +1,77 @@
-/* Fondo general */
+/* Paleta Bootstrap */
 .root {
-    -fx-background-color: #fdf6e3;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #f8f9fa;
 }
 
-/* Labels */
 .label {
-    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+    -fx-text-fill: #343a40;
     -fx-font-weight: bold;
 }
 
-/* Botones */
 .button {
-    -fx-background-color: #f4a261;
+    -fx-background-color: #0d6efd;
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
 }
 
 .button:hover {
-    -fx-background-color: #e76f51;
+    -fx-background-color: #0b5ed7;
 }
 
-/* ListViews */
+.button:focused {
+    -fx-border-color: #0d6efd;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+
 .list-view {
-    -fx-background-color: #fffbe6;
-    -fx-border-color: #f4a261;
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
     -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-padding: 5 8;
+}
+
+.separator {
+    -fx-background-color: #adb5bd;
+}
+
+.vbox, .hbox {
+    -fx-spacing: 10;
+}
+
+.grid-pane {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+}
+
+#panelProductos, #panelOrden {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 6;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+#panelTeclado {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 6;
+    -fx-padding: 15;
 }

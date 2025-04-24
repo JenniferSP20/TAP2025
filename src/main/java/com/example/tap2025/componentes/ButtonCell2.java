@@ -1,7 +1,7 @@
 package com.example.tap2025.componentes;
 
-import com.example.tap2025.modelos.ClientesDAO;
-import com.example.tap2025.vistas.Cliente;
+import com.example.tap2025.modelos.EmpleadoDAO;
+import com.example.tap2025.vistas.Empleado;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -10,18 +10,18 @@ import javafx.scene.control.TableCell;
 
 import java.util.Optional;
 
-public class ButtonCell extends TableCell<ClientesDAO, String> {
+public class ButtonCell2 extends TableCell<EmpleadoDAO, String> {
 
     private Button btnCelda;
     private String strLabelBtn;
-    public ButtonCell(String label){
+    public ButtonCell2(String label){
 
         strLabelBtn = label;
         btnCelda = new Button(strLabelBtn);
         btnCelda.setOnAction(event -> {
-            ClientesDAO objC = this.getTableView().getItems().get(this.getIndex());
+            EmpleadoDAO objC = this.getTableView().getItems().get(this.getIndex());
             if( strLabelBtn.equals("Editar")){
-                new Cliente(this.getTableView(),objC);
+                new Empleado(this.getTableView(),objC);
             }else{
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Mensaje del Sistema :)");
