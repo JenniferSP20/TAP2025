@@ -108,7 +108,7 @@ public class ClientesDAO {
     }
     @Override
     public String toString() {
-        return nomCte; // O puedes mostrar más datos, como nomCte + " - " + emailCte
+        return nomCte;
     }
 
 

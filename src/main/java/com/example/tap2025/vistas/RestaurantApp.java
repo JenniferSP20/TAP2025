@@ -10,11 +10,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class RestaurantApp extends Stage {
 
@@ -40,7 +41,7 @@ public class RestaurantApp extends Stage {
         root.setLeft(contenedorLateral);
 
         VBox contenedorCentralVertical = new VBox(30);
-        contenedorCentralVertical.setPadding(new Insets(40)); // Espaciado general
+        contenedorCentralVertical.setPadding(new Insets(40));
         contenedorCentralVertical.setAlignment(Pos.TOP_LEFT);
 
         HBox panelSuperior = new HBox(50);
@@ -67,6 +68,7 @@ public class RestaurantApp extends Stage {
     private VBox crearTecladoConLetras() {
         VBox panelTeclado = new VBox(10);
         panelTeclado.setPadding(new Insets(10));
+        panelTeclado.setId("panelTeclado");
         panelTeclado.setAlignment(Pos.TOP_CENTER);
 
         TextField txtNomCte = new TextField();
@@ -129,10 +131,7 @@ public class RestaurantApp extends Stage {
                 cliente.INSERT();
 
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Cliente Registrado", "El cliente ha sido registrado exitosamente.");
-                txtNomCte.clear();
-                txtTelCte.clear();
-                txtDireccion.clear();
-                txtEmail.clear();
+                this.close();
 
                 comboClientes.setItems(FXCollections.observableArrayList(new ClientesDAO().SELECT()));
             } else {
@@ -172,13 +171,27 @@ public class RestaurantApp extends Stage {
             ventanaTeclado.setTitle("Teclado Virtual");
 
             VBox panelTeclado = crearTecladoConLetras();
-            Scene escenaTeclado = new Scene(panelTeclado, 400, 500); // Ajusta el tamaño según sea necesario
+            Scene escenaTeclado = new Scene(panelTeclado, 500, 500);
+            escenaTeclado.getStylesheets().add(getClass().getResource("/Styles/teclado.css").toExternalForm());
             ventanaTeclado.setScene(escenaTeclado);
 
             ventanaTeclado.show();
         });
 
         return btnTeclado;
+    }
+
+    private Button crearBotonReservacion() {
+        Button btnReservacion = new Button("RESERVACIÓN");
+        btnReservacion.setFont(Font.font("Arial", 14));
+
+        btnReservacion.setOnAction(e -> {
+            ReservacionApp reservacionApp = new ReservacionApp();
+            reservacionApp.initOwner(this);
+            reservacionApp.showAndWait();
+        });
+
+        return btnReservacion;
     }
 
     private VBox crearBarraLateral() {
@@ -190,7 +203,11 @@ public class RestaurantApp extends Stage {
         barra.setMaxHeight(Double.MAX_VALUE);
         VBox.setVgrow(barra, Priority.ALWAYS);
 
-        String[] secciones = {"ADMINISTRACIÓN", "RESERVACION"};
+        Label lblControl = new Label("CONTROL");
+        lblControl.setFont(Font.font("Arial", 16));
+        barra.getChildren().add(lblControl);
+
+        String[] secciones = {"ADMINISTRACIÓN"};
         for (String sec : secciones) {
             Button btn = crearBotonMenu(sec);
             btn.setMaxWidth(Double.MAX_VALUE);
@@ -201,6 +218,10 @@ public class RestaurantApp extends Stage {
         btnRegistrarClientes.setMaxWidth(Double.MAX_VALUE);
         barra.getChildren().add(btnRegistrarClientes);
 
+        Button btnReservacion = crearBotonReservacion();
+        btnReservacion.setMaxWidth(Double.MAX_VALUE);
+        barra.getChildren().add(btnReservacion);
+
         Separator separador = new Separator();
         barra.getChildren().add(separador);
 
@@ -208,17 +229,45 @@ public class RestaurantApp extends Stage {
         lblCategorias.setFont(Font.font("Arial", 16));
         barra.getChildren().add(lblCategorias);
 
-        String[] categorias = {"BEBIDAS", "DESAYUNOS", "BOCADILLOS", "GUARNICIONES",
-                "CAFÉS", "POSTRES", "COMIDAS", "SNACKS", "MENÚS"};
+        GridPane gridCategorias = new GridPane();
+        gridCategorias.setHgap(10);
+        gridCategorias.setVgap(10);
+        gridCategorias.setAlignment(Pos.CENTER);
 
-        for (String cat : categorias) {
-            Button btnCat = crearBotonCategoria(cat);
-            btnCat.setOnAction(e -> cargarProductos(cat));
-            btnCat.setMaxWidth(Double.MAX_VALUE);
-            barra.getChildren().add(btnCat);
-        }
+        gridCategorias.add(crearBotonCategoria("Bebidas", "/Img/Categorias/Bebidas.png"), 0, 0);
+        gridCategorias.add(crearBotonCategoria("Desayunos", "/Img/Categorias/Desayunos.png"), 1, 0);
+        gridCategorias.add(crearBotonCategoria("Bocadillos", "/Img/Categorias/Bocadillos.png"), 0, 1);
+        gridCategorias.add(crearBotonCategoria("Guarniciones", "/Img/Categorias/Guarniciones.png"), 1, 1);
+        gridCategorias.add(crearBotonCategoria("Cafes", "/Img/Categorias/Cafes.png"), 0, 2);
+        gridCategorias.add(crearBotonCategoria("Postres", "/Img/Categorias/Postres.png"), 1, 2);
+        gridCategorias.add(crearBotonCategoria("Comidas", "/Img/Categorias/Comidas.png"), 0, 3);
+        gridCategorias.add(crearBotonCategoria("Snacks", "/Img/Categorias/Snacks.png"), 1, 3);
+        gridCategorias.add(crearBotonCategoria("Menus", "/Img/Categorias/Menus.png"), 0, 4);
+
+        barra.getChildren().add(gridCategorias);
 
         return barra;
+    }
+
+    private Button crearBotonCategoria(String nombreCategoria, String imagePath) {
+        Button btn = new Button();
+        btn.setPrefWidth(90);
+
+        try {
+            Image image = new Image(getClass().getResourceAsStream(imagePath));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(95);
+            imageView.setFitHeight(70);
+
+            btn.setGraphic(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar la imagen: " + imagePath);
+        }
+
+        btn.setOnAction(e -> cargarProductos(nombreCategoria));
+
+        return btn;
     }
 
     private VBox crearPanelProductos() {
@@ -232,7 +281,7 @@ public class RestaurantApp extends Stage {
         listaProductos = new ListView<>();
         listaProductos.setPrefSize(500, 300);
 
-        comboCantidad = new ComboBox<>(FXCollections.observableArrayList(1, 2, 3, 4, 5));
+        comboCantidad = new ComboBox<>(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
         comboCantidad.setValue(1);
 
         Button btnAgregar = new Button("AGREGAR");
@@ -343,14 +392,18 @@ public class RestaurantApp extends Stage {
         comboEmpleados = new ComboBox<>();
         comboEmpleados.setItems(FXCollections.observableArrayList(new EmpleadoDAO().SELECT()));
         comboEmpleados.setPromptText("Meseros");
+        panelEmpleados.setId("panelMesero");
+        panelEmpleados.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
         panelEmpleados.getChildren().addAll(lblEmpleado, comboEmpleados);
 
         VBox panelClientes = new VBox(5);
         Label lblCliente = new Label("CLIENTES:");
         comboClientes = new ComboBox<>();
         comboClientes.setItems(FXCollections.observableArrayList(new ClientesDAO().SELECT()));
-        comboClientes.setPromptText("Cliente");
+        comboClientes.setPromptText("Clientes");
         panelClientes.getChildren().addAll(lblCliente, comboClientes);
+        panelClientes.setId("panelCliente");
+        panelClientes.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
 
         panelSuperior.getChildren().addAll(panelEmpleados, panelClientes);
         return panelSuperior;
@@ -445,12 +498,17 @@ public class RestaurantApp extends Stage {
         return panelMesas;
     }
 
-    private void cargarProductos(String categoria) {
+    private void cargarProductos(String nombreCategoria) {
         ProductoDAO productoDAO = new ProductoDAO();
         mapaPrecios.clear();
         ObservableList<String> productos = FXCollections.observableArrayList();
 
-        int idCategoria = obtenerIdCategoriaPorNombre(categoria);
+        int idCategoria = obtenerIdCategoriaPorNombre(nombreCategoria);
+        if (idCategoria == -1) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Categoría no encontrada: " + nombreCategoria);
+            return;
+        }
+
         ObservableList<ProductoDAO> lista = productoDAO.obtenerProductosPorIdCategoria(idCategoria);
 
         for (ProductoDAO producto : lista) {
@@ -489,13 +547,6 @@ public class RestaurantApp extends Stage {
         Button btn = new Button(texto);
         btn.setFont(Font.font("Arial", 14));
         btn.setPrefWidth(150);
-        return btn;
-    }
-
-    private Button crearBotonCategoria(String texto) {
-        Button btn = new Button(texto);
-        btn.setFont(Font.font("Arial", 13));
-        btn.setPrefWidth(160);
         return btn;
     }
 
