@@ -40,6 +40,7 @@
             <version>8.0.33</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.kordamp.bootstrapfx</groupId>
             <artifactId>bootstrapfx-core</artifactId>

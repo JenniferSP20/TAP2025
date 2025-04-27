@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 public class ProductoDAO {
 
@@ -127,6 +128,9 @@ public class ProductoDAO {
             e.printStackTrace();
         }
         return listaP;
+    }
+    public List<InsumoDAO> obtenerInsumos(int Id_Producto) {
+        return new InsumoDAO().obtenerInsumosPorIdProducto(Id_Producto);
     }
 }
 

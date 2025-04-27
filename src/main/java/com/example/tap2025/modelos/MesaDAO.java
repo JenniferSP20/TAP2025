@@ -12,7 +12,7 @@ public class MesaDAO {
     private int capacidad;
     private boolean ocupado;
 
-    public int getidMesa() {
+    public int getIdMesa() {
         return idMesa;
     }
 

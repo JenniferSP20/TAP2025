@@ -1,12 +1,14 @@
 package com.example.tap2025.vistas;
 
 import com.example.tap2025.modelos.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -14,8 +16,8 @@ import javafx.stage.Stage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -187,6 +189,25 @@ public class RestaurantApp extends Stage {
         return btnTeclado;
     }
 
+    private Button crearBotonInsumos() {
+        Button btnInsumos = new Button("INSUMO");
+        btnInsumos.setFont(Font.font("Arial", 14));
+
+        btnInsumos.setOnAction(e -> {
+            Stage ventanaInsumos = new Stage();
+            ventanaInsumos.setTitle("Insumos de Productos");
+
+            VBox panelInsumos = crearPanelInsumos();
+            Scene escenaInsumos = new Scene(panelInsumos, 800, 600);
+            escenaInsumos.getStylesheets().add(getClass().getResource("/Styles/restaurant.css").toExternalForm());
+            ventanaInsumos.setScene(escenaInsumos);
+
+            ventanaInsumos.show();
+        });
+
+        return btnInsumos;
+    }
+
     private Button crearBotonReservacion() {
         Button btnReservacion = new Button("RESERVACIÓN");
         btnReservacion.setFont(Font.font("Arial", 14));
@@ -213,27 +234,28 @@ public class RestaurantApp extends Stage {
         lblControl.setFont(Font.font("Arial", 16));
         barra.getChildren().add(lblControl);
 
-        String[] secciones = {"ADMINISTRACIÓN"};
-        for (String sec : secciones) {
-            Button btn = crearBotonMenu(sec);
-            btn.setMaxWidth(Double.MAX_VALUE);
+        GridPane gridBotones = new GridPane();
+        gridBotones.setHgap(10);
+        gridBotones.setVgap(10);
+        gridBotones.setAlignment(Pos.CENTER);
 
-            if (sec.equals("ADMINISTRACIÓN")) {
-                btn.setOnAction(e -> {
-                    new Login().mostrarVentanaLogin();
-                });
-            }
-
-            barra.getChildren().add(btn);
-        }
+        Button btnAdministracion = crearBotonMenu("ADMINISTRACIÓN");
+        btnAdministracion.setOnAction(e -> {
+            new Login().mostrarVentanaLogin();
+        });
 
         Button btnReservacion = crearBotonReservacion();
-        btnReservacion.setMaxWidth(Double.MAX_VALUE);
-        barra.getChildren().add(btnReservacion);
 
         Button btnRegistrarClientes = crearBotonRegistrarClientes();
-        btnRegistrarClientes.setMaxWidth(Double.MAX_VALUE);
-        barra.getChildren().add(btnRegistrarClientes);
+
+        Button btnInsumos = crearBotonInsumos();
+
+        gridBotones.add(btnAdministracion, 0, 0);
+        gridBotones.add(btnReservacion, 1, 0);
+        gridBotones.add(btnRegistrarClientes, 0, 1);
+        gridBotones.add(btnInsumos, 1, 1);
+
+        barra.getChildren().add(gridBotones);
 
         Separator separador = new Separator();
         barra.getChildren().add(separador);
@@ -342,6 +364,44 @@ public class RestaurantApp extends Stage {
         return panel;
     }
 
+    private VBox crearPanelInsumos() {
+        VBox panel = new VBox(10);
+        panel.setPadding(new Insets(10));
+        panel.setAlignment(Pos.TOP_CENTER);
+
+        Label lbl = new Label("INSUMO DEL PRODUCTO:");
+        lbl.setFont(Font.font("Arial", 16));
+
+        TableView<InsumoProducto> tableInsumos = new TableView<>();
+        tableInsumos.setPrefSize(700, 500);
+
+        TableColumn<InsumoProducto, String> productoCol = new TableColumn<>("Producto");
+        productoCol.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+
+        TableColumn<InsumoProducto, String> insumoCol = new TableColumn<>("Insumo");
+        insumoCol.setCellValueFactory(new PropertyValueFactory<>("nombreInsumo"));
+
+        TableColumn<InsumoProducto, String> unidadCol = new TableColumn<>("Unidad");
+        unidadCol.setCellValueFactory(new PropertyValueFactory<>("unidadMedida"));
+
+        tableInsumos.getColumns().addAll(productoCol, insumoCol, unidadCol);
+
+        ObservableList<InsumoProducto> insumosList = FXCollections.observableArrayList();
+        ProductoDAO productoDAO = new ProductoDAO();
+        ObservableList<ProductoDAO> productos = productoDAO.SELECT();
+        for (ProductoDAO producto : productos) {
+            List<InsumoDAO> insumos = productoDAO.obtenerInsumos(producto.getId_Producto());
+            for (InsumoDAO insumo : insumos) {
+                insumosList.add(new InsumoProducto(producto.getNombreProducto(), insumo.getNombreInsumo(), insumo.getUnidadMedida()));
+            }
+        }
+
+        tableInsumos.setItems(insumosList);
+
+        panel.getChildren().addAll(lbl, tableInsumos);
+        return panel;
+    }
+
     private void finalizarOrden() {
         if (mesaSeleccionada == -1) {
             mostrarAlerta(Alert.AlertType.WARNING, "Mesa no seleccionada", "Por favor, selecciona una mesa antes de finalizar la orden.");
@@ -422,7 +482,6 @@ public class RestaurantApp extends Stage {
         mostrarAlerta(Alert.AlertType.INFORMATION, "Orden Finalizada", "¡Tu orden ha sido guardada exitosamente!");
     }
 
-
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
@@ -430,6 +489,7 @@ public class RestaurantApp extends Stage {
         alert.setContentText(contenido);
         alert.showAndWait();
     }
+
     private int obtenerIdProductoPorNombre(String nombreProducto) {
         int idProducto = -1;
         String query = "SELECT Id_Producto FROM producto WHERE nombreProducto = ?";
@@ -491,15 +551,15 @@ public class RestaurantApp extends Stage {
         int count = 0;
 
         for (MesaDAO mesa : listaMesas) {
-            Button btnMesa = new Button(String.valueOf(mesa.getidMesa()));
+            Button btnMesa = new Button(String.valueOf(mesa.getIdMesa()));
             btnMesa.setPrefSize(40, 40);
 
             btnMesa.setOnAction(e -> {
-                mesaSeleccionada = mesa.getidMesa();
+                mesaSeleccionada = mesa.getIdMesa();
             });
 
-            mapaBotonesMesas.put(mesa.getidMesa(), btnMesa);
-            capacidadMesas.put(mesa.getidMesa(), mesa.getCapacidad());
+            mapaBotonesMesas.put(mesa.getIdMesa(), btnMesa);
+            capacidadMesas.put(mesa.getIdMesa(), mesa.getCapacidad());
             filaActual.getChildren().add(btnMesa);
             count++;
 
@@ -607,14 +667,14 @@ public class RestaurantApp extends Stage {
 
     private int obtenerIdCategoriaPorNombre(String nombreCategoria) {
         int idCategoria = -1;
-        String query = "SELECT Id_Categoria FROM categoria WHERE nombreCategoria = '" + nombreCategoria + "'";
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        String query = "SELECT Id_Categoria FROM categoria WHERE nombreCategoria = ?";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+            stmt.setString(1, nombreCategoria);
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 idCategoria = rs.getInt("Id_Categoria");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return idCategoria;
@@ -636,5 +696,30 @@ public class RestaurantApp extends Stage {
         btn.setFont(Font.font("Arial", 13));
         btn.setPrefWidth(160);
         return btn;
+    }
+
+    // Clase auxiliar para mostrar los insumos en la tabla
+    public static class InsumoProducto {
+        private final SimpleStringProperty nombreProducto;
+        private final SimpleStringProperty nombreInsumo;
+        private final SimpleStringProperty unidadMedida;
+
+        public InsumoProducto(String nombreProducto, String nombreInsumo, String unidadMedida) {
+            this.nombreProducto = new SimpleStringProperty(nombreProducto);
+            this.nombreInsumo = new SimpleStringProperty(nombreInsumo);
+            this.unidadMedida = new SimpleStringProperty(unidadMedida);
+        }
+
+        public String getNombreProducto() {
+            return nombreProducto.get();
+        }
+
+        public String getNombreInsumo() {
+            return nombreInsumo.get();
+        }
+
+        public String getUnidadMedida() {
+            return unidadMedida.get();
+        }
     }
 }

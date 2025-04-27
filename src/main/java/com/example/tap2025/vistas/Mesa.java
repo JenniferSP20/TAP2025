@@ -43,7 +43,7 @@ public class Mesa extends Stage {
         btnGuardar.setOnAction(event -> {
             objM.setCapacidad(Integer.parseInt(txtCapacidad.getText()));
             objM.setOcupado(chkOcupado.isSelected());
-            if (objM.getidMesa() > 0) {
+            if (objM.getIdMesa() > 0) {
                 objM.UPDATE();
             } else {
                 objM.INSERT();
