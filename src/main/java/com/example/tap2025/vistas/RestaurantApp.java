@@ -22,8 +22,8 @@ import javafx.scene.image.ImageView;
 
 public class RestaurantApp extends Stage {
 
-    private ListView<String> listaProductos;
     private ListView<String> listaOrden;
+    private ListView<HBox> listaProductos;
     private ComboBox<Integer> comboCantidad;
     private ComboBox<EmpleadoDAO> comboEmpleados;
     private ComboBox<ClientesDAO> comboClientes;
@@ -299,10 +299,12 @@ public class RestaurantApp extends Stage {
 
         Button btnAgregar = new Button("AGREGAR");
         btnAgregar.setOnAction(e -> {
-            String item = listaProductos.getSelectionModel().getSelectedItem();
-            if (item != null) {
+            HBox selectedItem = listaProductos.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                Label nombreLabel = (Label) selectedItem.getChildren().get(1);
+                String item = nombreLabel.getText();
                 int cantidad = comboCantidad.getValue();
-                Double precio = mapaPrecios.get(item);
+                Double precio = mapaPrecios.get(item.split(" - \\$")[0]);
                 if (precio != null) {
                     listaOrden.getItems().add(cantidad + " x " + item);
                     total += cantidad * precio;
@@ -562,7 +564,7 @@ public class RestaurantApp extends Stage {
     private void cargarProductos(String nombreCategoria) {
         ProductoDAO productoDAO = new ProductoDAO();
         mapaPrecios.clear();
-        ObservableList<String> productos = FXCollections.observableArrayList();
+        ObservableList<HBox> productos = FXCollections.observableArrayList();
 
         int idCategoria = obtenerIdCategoriaPorNombre(nombreCategoria);
         if (idCategoria == -1) {
@@ -573,9 +575,27 @@ public class RestaurantApp extends Stage {
         ObservableList<ProductoDAO> lista = productoDAO.obtenerProductosPorIdCategoria(idCategoria);
 
         for (ProductoDAO producto : lista) {
-            String nombreFormateado = producto.getNombreProducto() + " - $" + producto.getPrecio();
-            productos.add(nombreFormateado);
-            mapaPrecios.put(nombreFormateado, producto.getPrecio());
+            HBox productoBox = new HBox(10);
+            productoBox.setAlignment(Pos.CENTER_LEFT);
+
+            if (producto.getImagenProducto() != null && !producto.getImagenProducto().isEmpty()) {
+                try {
+                    Image image = new Image(getClass().getResourceAsStream("/Img/Productos/" + producto.getImagenProducto()));
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(50);
+                    imageView.setFitHeight(50);
+                    productoBox.getChildren().add(imageView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Error al cargar la imagen del producto: " + producto.getImagenProducto());
+                }
+            }
+
+            Label nombreLabel = new Label(producto.getNombreProducto() + " - $" + producto.getPrecio());
+            productoBox.getChildren().add(nombreLabel);
+
+            productos.add(productoBox);
+            mapaPrecios.put(producto.getNombreProducto(), producto.getPrecio());
         }
 
         if (productos.isEmpty()) {
