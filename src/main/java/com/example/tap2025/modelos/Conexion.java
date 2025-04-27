@@ -1,6 +1,7 @@
 package com.example.tap2025.modelos;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Conexion {
     static private String DB = "restaurante";
@@ -19,5 +20,16 @@ public class Conexion {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                createConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            createConnection();
+        }
+        return connection;
     }
 }

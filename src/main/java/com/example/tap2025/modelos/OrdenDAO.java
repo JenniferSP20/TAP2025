@@ -1,8 +1,6 @@
 package com.example.tap2025.modelos;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -72,67 +70,53 @@ public class OrdenDAO {
         this.total = total;
     }
     public void UPDATE() {
-        String query = "UPDATE orden SET detallesOrden = '" + detallesOrden + "', "
-                + "idMesa = "   + idMesa      + ", "
-                + "Id_Empleado = " + Id_Empleado + ", "
-                + "idCte = "  + idCte       + ", "
-                + "fecha = '"      + fecha       + "', "
-                + "total = "       + total       +
-                " WHERE Id_Orden = " + Id_Orden;
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
+        String query = "UPDATE orden SET detallesOrden = ?, idMesa = ?, Id_Empleado = ?, idCte = ?, fecha = ?, total = ? WHERE Id_Orden = ?";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+            stmt.setString(1, detallesOrden);
+            stmt.setInt(2, idMesa);
+            stmt.setInt(3, Id_Empleado);
+            stmt.setInt(4, idCte);
+            stmt.setString(5, fecha);
+            stmt.setDouble(6, total);
+            stmt.setInt(7, Id_Orden);
+            stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void DELETE(){
-        String query = "DELETE FROM orden WHERE Id_Orden = "+Id_Orden;
-        try{
-            Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
-        }catch(Exception e){
+        String query = "DELETE FROM orden WHERE Id_Orden = ?";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+            stmt.setInt(1, Id_Orden);
+            stmt.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void INSERT() {
-        String query = "INSERT INTO orden(detallesOrden, idMesa, Id_Empleado, idCte, fecha, total) " +
-                "VALUES('" + detallesOrden + "', "
-                + idMesa + ", "
-                + Id_Empleado + ", "
-                + idCte + ", '"
-                + fecha + "', "
-                + total + ")";
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        String query = "INSERT INTO orden(detallesOrden, idMesa, Id_Empleado, idCte, fecha, total) VALUES(?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, detallesOrden);
+            stmt.setInt(2, idMesa);
+            stmt.setInt(3, Id_Empleado);
+            stmt.setInt(4, idCte);
+            stmt.setString(5, fecha);
+            stmt.setDouble(6, total);
+            stmt.executeUpdate();
 
-    public ObservableList<OrdenDAO> SELECT() {
-        String query = "SELECT * FROM orden";
-        ObservableList<OrdenDAO> listaO = FXCollections.observableArrayList();
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            ResultSet res = stmt.executeQuery(query);
-            while (res.next()) {
-                OrdenDAO objO = new OrdenDAO();
-                objO.setId_Orden(res.getInt("Id_Orden"));
-                objO.setDetallesOrden(res.getString("detallesOrden"));
-                objO.setidMesa(res.getInt("idMesa"));           // <- nombre exacto
-                objO.setId_Empleado(res.getInt("Id_Empleado"));
-                objO.setidCte(res.getInt("idCte"));          // <- nombre exacto
-                objO.setFecha(res.getString("fecha"));
-                objO.setTotal(res.getDouble("total"));
-                listaO.add(objO);
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    this.Id_Orden = generatedKeys.getInt(1);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return listaO;
     }
 
+    public int getLastInsertedId() {
+        return this.Id_Orden;
+    }
 }

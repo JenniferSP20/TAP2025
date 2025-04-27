@@ -203,10 +203,7 @@ public class ReservacionApp extends Stage {
                 cliente.INSERT();
 
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Cliente Registrado", "El cliente ha sido registrado exitosamente.");
-                txtNomCte.clear();
-                txtTelCte.clear();
-                txtDireccion.clear();
-                txtEmail.clear();
+                this.close();
 
                 comboClientes.setItems(FXCollections.observableArrayList(new ClientesDAO().SELECT()));
             } else {

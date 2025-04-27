@@ -10,7 +10,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -131,7 +134,10 @@ public class RestaurantApp extends Stage {
                 cliente.INSERT();
 
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Cliente Registrado", "El cliente ha sido registrado exitosamente.");
-                this.close();
+                txtNomCte.clear();
+                txtTelCte.clear();
+                txtDireccion.clear();
+                txtEmail.clear();
 
                 comboClientes.setItems(FXCollections.observableArrayList(new ClientesDAO().SELECT()));
             } else {
@@ -211,16 +217,23 @@ public class RestaurantApp extends Stage {
         for (String sec : secciones) {
             Button btn = crearBotonMenu(sec);
             btn.setMaxWidth(Double.MAX_VALUE);
+
+            if (sec.equals("ADMINISTRACIÓN")) {
+                btn.setOnAction(e -> {
+                    new Login().mostrarVentanaLogin();
+                });
+            }
+
             barra.getChildren().add(btn);
         }
-
-        Button btnRegistrarClientes = crearBotonRegistrarClientes();
-        btnRegistrarClientes.setMaxWidth(Double.MAX_VALUE);
-        barra.getChildren().add(btnRegistrarClientes);
 
         Button btnReservacion = crearBotonReservacion();
         btnReservacion.setMaxWidth(Double.MAX_VALUE);
         barra.getChildren().add(btnReservacion);
+
+        Button btnRegistrarClientes = crearBotonRegistrarClientes();
+        btnRegistrarClientes.setMaxWidth(Double.MAX_VALUE);
+        barra.getChildren().add(btnRegistrarClientes);
 
         Separator separador = new Separator();
         barra.getChildren().add(separador);
@@ -234,15 +247,15 @@ public class RestaurantApp extends Stage {
         gridCategorias.setVgap(10);
         gridCategorias.setAlignment(Pos.CENTER);
 
-        gridCategorias.add(crearBotonCategoria("Bebidas", "/Img/Categorias/Bebidas.png"), 0, 0);
-        gridCategorias.add(crearBotonCategoria("Desayunos", "/Img/Categorias/Desayunos.png"), 1, 0);
-        gridCategorias.add(crearBotonCategoria("Bocadillos", "/Img/Categorias/Bocadillos.png"), 0, 1);
-        gridCategorias.add(crearBotonCategoria("Guarniciones", "/Img/Categorias/Guarniciones.png"), 1, 1);
-        gridCategorias.add(crearBotonCategoria("Cafes", "/Img/Categorias/Cafes.png"), 0, 2);
-        gridCategorias.add(crearBotonCategoria("Postres", "/Img/Categorias/Postres.png"), 1, 2);
-        gridCategorias.add(crearBotonCategoria("Comidas", "/Img/Categorias/Comidas.png"), 0, 3);
-        gridCategorias.add(crearBotonCategoria("Snacks", "/Img/Categorias/Snacks.png"), 1, 3);
-        gridCategorias.add(crearBotonCategoria("Menus", "/Img/Categorias/Menus.png"), 0, 4);
+        gridCategorias.add(crearBotonCategoria("BEBIDAS", "/Img/Categorias/Bebidas.png"), 0, 0);
+        gridCategorias.add(crearBotonCategoria("DESAYUNOS", "/Img/Categorias/Desayunos.png"), 1, 0);
+        gridCategorias.add(crearBotonCategoria("BOCADILLOS", "/Img/Categorias/Bocadillos.png"), 0, 1);
+        gridCategorias.add(crearBotonCategoria("GUARNICIONES", "/Img/Categorias/Guarniciones.png"), 1, 1);
+        gridCategorias.add(crearBotonCategoria("CAFÉS", "/Img/Categorias/Cafes.png"), 0, 2);
+        gridCategorias.add(crearBotonCategoria("POSTRES", "/Img/Categorias/Postres.png"), 1, 2);
+        gridCategorias.add(crearBotonCategoria("COMIDAS", "/Img/Categorias/Comidas.png"), 0, 3);
+        gridCategorias.add(crearBotonCategoria("SNACKS", "/Img/Categorias/Snacks.png"), 1, 3);
+        gridCategorias.add(crearBotonCategoria("MENÚS", "/Img/Categorias/Menus.png"), 0, 4);
 
         barra.getChildren().add(gridCategorias);
 
@@ -294,7 +307,11 @@ public class RestaurantApp extends Stage {
                     listaOrden.getItems().add(cantidad + " x " + item);
                     total += cantidad * precio;
                     actualizarTotal();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "Precio no encontrado para el producto seleccionado.");
                 }
+            } else {
+                mostrarAlerta(Alert.AlertType.WARNING, "Selección de Producto", "Por favor, selecciona un producto antes de agregarlo a la orden.");
             }
         });
 
@@ -362,6 +379,35 @@ public class RestaurantApp extends Stage {
 
         orden.INSERT();
 
+        int idOrden = orden.getLastInsertedId();
+        System.out.println("ID de la orden insertada: " + idOrden);
+
+        if (idOrden == 0) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo obtener el ID de la orden insertada.");
+            return;
+        }
+
+        for (String item : listaOrden.getItems()) {
+            String[] partes = item.split(" x ");
+            int cantidad = Integer.parseInt(partes[0]);
+            String nombreProducto = partes[1].split(" - \\$")[0];
+
+            System.out.println("Buscando producto: " + nombreProducto);
+
+            int idProducto = obtenerIdProductoPorNombre(nombreProducto);
+
+            if (idProducto != -1) {
+                OrdenDetalleDAO ordenDetalle = new OrdenDetalleDAO();
+                ordenDetalle.setId_Orden(idOrden);
+                ordenDetalle.setId_Producto(idProducto);
+                ordenDetalle.setCantidad(cantidad);
+                ordenDetalle.INSERT();
+                System.out.println("Insertando en orden_detalle: Id_Orden=" + idOrden + ", Id_Producto=" + idProducto + ", Cantidad=" + cantidad);
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "Producto no encontrado: " + nombreProducto);
+            }
+        }
+
         MesaDAO mesa = new MesaDAO();
         mesa.setIdMesa(mesaSeleccionada);
         mesa.setOcupado(true);
@@ -374,12 +420,27 @@ public class RestaurantApp extends Stage {
         mostrarAlerta(Alert.AlertType.INFORMATION, "Orden Finalizada", "¡Tu orden ha sido guardada exitosamente!");
     }
 
+
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
+    }
+    private int obtenerIdProductoPorNombre(String nombreProducto) {
+        int idProducto = -1;
+        String query = "SELECT Id_Producto FROM producto WHERE nombreProducto = ?";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+            stmt.setString(1, nombreProducto);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idProducto = rs.getInt("Id_Producto");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idProducto;
     }
 
     private VBox crearPanelSuperior() {

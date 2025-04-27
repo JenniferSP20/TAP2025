@@ -15,7 +15,7 @@ public class HelloApplication extends Application {
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitCalculadora, mitC, mitE, mitP, mitM,mitO, mitRompecabeza, mitHilo, mitRestaurantApp;
+    private MenuItem mitCalculadora, mitRegistro, mitRompecabeza, mitHilo, mitRestaurantApp;
     private Scene escena;
 
     void CrearUI() {
@@ -26,29 +26,17 @@ public class HelloApplication extends Application {
         mitRompecabeza = new MenuItem("Rompecabezas");
         mitRompecabeza.setOnAction(actionEvent -> new Rompecabezas());
 
-        mitC = new MenuItem("ListaC");
-        mitC.setOnAction(actionEvent -> new ListaClientes());
-
-        mitE = new MenuItem("ListaE");
-        mitE.setOnAction(actionEvent -> new ListaEmpleados());
-
-        mitP = new MenuItem("ListaP");
-        mitP.setOnAction(actionEvent -> new ListaProducto());
-
-        mitM = new MenuItem("ListaM");
-        mitM.setOnAction(actionEvent -> new ListaMesas());
-
-        mitO = new MenuItem("ListaO");
-        mitO.setOnAction(actionEvent -> new ListaOrden());
-
         mitHilo = new MenuItem("Celayork");
         mitHilo.setOnAction(actionEvent -> new Celayork());
 
         mitRestaurantApp = new MenuItem("RestaurantApp");
         mitRestaurantApp.setOnAction(actionEvent -> new RestaurantApp());
 
+        mitRegistro = new MenuItem("Registro");
+        mitRegistro.setOnAction(actionEvent -> new Registro().mostrarVentanaRegistro());
+
         menCompetencia1 = new Menu("Competencia 1");
-        menCompetencia1.getItems().addAll(mitCalculadora, mitC, mitE,mitP,mitM, mitO, mitRestaurantApp, mitRompecabeza);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitRegistro, mitRestaurantApp, mitRompecabeza);
 
         menCompetencia2 = new Menu("Competencia 2");
         menCompetencia2.getItems().addAll(mitHilo);
@@ -60,8 +48,6 @@ public class HelloApplication extends Application {
         String css = getClass().getResource("/Styles/main.Css").toExternalForm();
         escena.getStylesheets().add(css);
     }
-
-
 
     @Override
     public void start(Stage stage) {
